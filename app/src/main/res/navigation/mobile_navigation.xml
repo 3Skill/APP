@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.kadamm.ui.home.ConnexioFragment"
+        android:name="com.example.kadamm.ui.connexio.ConnexioFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_connexio" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.kadamm.ui.usuari.UsuariFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_usuari" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.kadamm.ui.fites.FitesFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_fites" />
 </navigation>

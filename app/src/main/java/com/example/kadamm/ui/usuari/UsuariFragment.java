@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.kadamm.databinding.FragmentDashboardBinding;
+import com.example.kadamm.databinding.FragmentUsuariBinding;
 
 public class UsuariFragment extends Fragment {
 
     private UsuariViewModel usuariViewModel;
-    private FragmentDashboardBinding binding;
+    private FragmentUsuariBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         usuariViewModel =
                 new ViewModelProvider(this).get(UsuariViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentUsuariBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textDashboard;

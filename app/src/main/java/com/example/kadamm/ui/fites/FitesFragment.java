@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.kadamm.databinding.FragmentNotificationsBinding;
+import com.example.kadamm.databinding.FragmentFitesBinding;
 
 public class FitesFragment extends Fragment {
 
     private FitesViewModel fitesViewModel;
-    private FragmentNotificationsBinding binding;
+    private FragmentFitesBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         fitesViewModel =
                 new ViewModelProvider(this).get(FitesViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentFitesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textNotifications;
