@@ -3,4 +3,7 @@
     <string name="title_home">Connexió</string>
     <string name="title_dashboard">Usuari</string>
     <string name="title_notifications">Fites</string>
+    <string name="btnConnectaText">Connecta!</string>
+    <string name="titolConnexio">Introdueix la IP</string>
+    <string name="descripcio_semafor_vermell">Semàfor vermell</string>
 </resources>
