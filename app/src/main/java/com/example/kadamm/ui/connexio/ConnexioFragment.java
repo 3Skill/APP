@@ -74,7 +74,7 @@ public class ConnexioFragment extends Fragment {
 
                 Client client = new Client(serverIP, 1110, callHandler);
 
-                Toast.makeText(getContext(), "Servidor disponible", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Servidor disponible", Toast.LENGTH_LONG).show();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
