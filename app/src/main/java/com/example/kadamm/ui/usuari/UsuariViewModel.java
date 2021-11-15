@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class UsuariViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-
-    public UsuariViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Fragment usuari");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
+//    private MutableLiveData<String> mText;
+//
+//    public UsuariViewModel() {
+//        mText = new MutableLiveData<>();
+//        mText.setValue("Fragment usuari");
+//    }
+//
+//    public LiveData<String> getText() {
+//        return mText;
+//    }
 }

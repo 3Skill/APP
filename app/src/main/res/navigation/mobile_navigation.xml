@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_connexio">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_connexio"
         android:name="com.example.kadamm.ui.connexio.ConnexioFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_connexio" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_usuari"
         android:name="com.example.kadamm.ui.usuari.UsuariFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_usuari" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_fites"
         android:name="com.example.kadamm.ui.fites.FitesFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_fites" />
