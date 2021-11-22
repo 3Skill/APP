@@ -48,6 +48,7 @@ public class ConnexioFragment extends Fragment {
     private Handler handler;
     private String nickname = "";
     private TextView tvNickName;
+    private boolean isKahootRoom;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         handler = new Handler(Looper.getMainLooper());
@@ -101,12 +102,20 @@ public class ConnexioFragment extends Fragment {
                 InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
                 Log.d("lksdjf", nickname);
                 testService.setNickName(nickname);
+                isKahootRoom = testService.getKahootState();
+
                 Toast.makeText(getContext(), "Servidor disponible", Toast.LENGTH_LONG).show();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         ImageView tuImageView = (ImageView) getView().findViewById(R.id.imgViewSemafor);
-                        tuImageView.setImageResource(R.drawable.traffic_light_orange);
+                        if (isKahootRoom){
+                            tuImageView.setImageResource(R.drawable.traffic_light_green);
+                        }else {
+                            tuImageView.setImageResource(R.drawable.traffic_light_orange);
+                        }
+
                     }
                 });
 
