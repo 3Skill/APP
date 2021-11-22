@@ -28,8 +28,8 @@ public class UsuariFragment extends Fragment {
     private EditText nickName;
     private Button saveNickName;
 
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String TEXT = "text";
+    public static final String SHARED_PREFS = "spNickname";
+    public static final String TEXT = "nickname";
 
     private String text;
 
