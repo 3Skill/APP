@@ -41,13 +41,6 @@ public class UsuariFragment extends Fragment {
         binding = FragmentUsuariBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-//        final TextView textView = binding.textDashboard;
-//        usuariViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         nickNameTitle = (TextView) root.findViewById(R.id.tvNickname);
         nickName = (EditText) root.findViewById(R.id.etNickname);
         saveNickName = (Button) root.findViewById(R.id.btnSaveNickname);
