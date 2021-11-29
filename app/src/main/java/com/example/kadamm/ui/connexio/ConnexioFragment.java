@@ -1,10 +1,12 @@
 package com.example.kadamm.ui.connexio;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.CountDownTimer;
+import android.os.Looper;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -44,7 +46,7 @@ public class ConnexioFragment extends Fragment {
 
     //Atributos recibidos
     private String tempsResposta;
-    private String tempsIniciConcurs;
+    private int tempsIniciConcurs;
     private String pregunta;
     private ArrayList<String> respostes;
 
@@ -210,7 +212,7 @@ public class ConnexioFragment extends Fragment {
                             @Override
                             public void run() {
                                 Toast.makeText(requireActivity(), "Usuari registrat", Toast.LENGTH_SHORT).show();
-                                getAtributes();
+                                getAttributes();
                                 checkStatusRoom();
                             }
                         });
@@ -285,7 +287,7 @@ public class ConnexioFragment extends Fragment {
         alertDialog.show();
     }
     // Method for get all atributes of the actual position of the concurs
-    public void getAtributes(){
+    public void getAttributes(){
 
         new Thread(new Runnable() {
             @Override
@@ -300,8 +302,9 @@ public class ConnexioFragment extends Fragment {
 
                 try {
                     ArrayList<String> infoConcurs = testService.getConcurs(questionIterator);
+                    respostes = new ArrayList<String>();
                     pregunta = infoConcurs.get(0);
-                    tempsIniciConcurs = infoConcurs.get(1);
+                    tempsIniciConcurs = Integer.parseInt(infoConcurs.get(1));
                     tempsResposta = infoConcurs.get(2);
                     for (int i = 3;i< infoConcurs.size();i++){
                         respostes.add(infoConcurs.get(i));
@@ -317,6 +320,7 @@ public class ConnexioFragment extends Fragment {
         }).start();
 
     }
+    private Thread hilo;
     public void checkStatusRoom(){
 
         new Thread(new Runnable() {
@@ -332,16 +336,48 @@ public class ConnexioFragment extends Fragment {
 
                 try {
                     if (testService.getWaitingRoom2Status()){
-                        try {
-                            //Aqui hay que editar el timer
-                            Thread.sleep(Integer.parseInt(tempsIniciConcurs));
-                            System.out.println("Dentro del concurso");
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+
+//                        try {
+//                            //Aqui hay que editar el timer
+//                            Thread.sleep(tempsIniciConcurs);
+//                            System.out.println("Dentro del concurso");
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                        System.out.println("CUENTA ATRAS:");
+                        System.out.println("Hilo acabado");
+
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ProgressDialog progressDialog = new ProgressDialog(requireActivity());
+                                progressDialog.setTitle("Concurs");
+                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                progressDialog.setMessage("Iniciant...");
+                                progressDialog.show();
+                                progressDialog.setCancelable(false);
+
+                                new CountDownTimer(tempsIniciConcurs*1000,1000) {
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        //countdown.setText(String.valueOf(counter));
+                                        System.out.println(tempsIniciConcurs);
+                                        tempsIniciConcurs--;
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        System.out.println("DENTRO");
+                                        progressDialog.dismiss();
+                                        
+                                        //countdown.setText("Finished");
+                                    }
+                                }.start();
+                            }
+                        });
+
 
                     }else{
-                        System.out.println("Nothing");
+                        //System.out.println("No ha comenzado el concurso");
                         checkStatusRoom();
                     }
                 } catch (Exception e) {
@@ -352,11 +388,14 @@ public class ConnexioFragment extends Fragment {
             }
         }).start();
 
+
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
 
 }
