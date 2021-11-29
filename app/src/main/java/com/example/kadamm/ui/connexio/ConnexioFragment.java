@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -25,6 +26,7 @@ import com.example.kadamm.databinding.FragmentConnexioBinding;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ConnexioFragment extends Fragment {
 
@@ -35,10 +37,17 @@ public class ConnexioFragment extends Fragment {
     private ImageView trafficLight;
     private boolean isServerAvailable;
     private boolean isNickName;
-
-//    private InterRMI testService;
+    private InterRMI testService;
+    private int questionIterator = 0;
     private View v;
     Button btnConnection;
+
+    //Atributos recibidos
+    private String tempsResposta;
+    private String tempsIniciConcurs;
+    private String pregunta;
+    private ArrayList<String> respostes;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +78,7 @@ public class ConnexioFragment extends Fragment {
 
                 // Test if there's some Waiting Room available
                 searchWaitingRoom(serverIP.getText().toString());
+
 
             }
         });
@@ -140,7 +150,7 @@ public class ConnexioFragment extends Fragment {
                     CallHandler callHandler = new CallHandler();
                     int port = 1110;
                     Client client = new Client(serverIP, port, callHandler);
-                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
+                    testService = (InterRMI) client.getGlobal(InterRMI.class);
 
                     if (testService.getWaitingRoomStatus()){
                         requireActivity().runOnUiThread(new Runnable() {
@@ -189,7 +199,7 @@ public class ConnexioFragment extends Fragment {
                     CallHandler callHandler = new CallHandler();
                     int port = 1110;
                     Client client = new Client(serverIP, port, callHandler);
-                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
+                    testService = (InterRMI) client.getGlobal(InterRMI.class);
 
                     // Check if nickname not already in the waiting room
                     if (testService.isUserAvailable(nickname)){
@@ -200,6 +210,8 @@ public class ConnexioFragment extends Fragment {
                             @Override
                             public void run() {
                                 Toast.makeText(requireActivity(), "Usuari registrat", Toast.LENGTH_SHORT).show();
+                                getAtributes();
+                                checkStatusRoom();
                             }
                         });
 
@@ -213,7 +225,7 @@ public class ConnexioFragment extends Fragment {
 
                     }
 
-                    client.close();
+                    //client.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -272,7 +284,75 @@ public class ConnexioFragment extends Fragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    // Method for get all atributes of the actual position of the concurs
+    public void getAtributes(){
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //POLL de 2 segundos
+                try {
+                    Thread.sleep(2000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    ArrayList<String> infoConcurs = testService.getConcurs(questionIterator);
+                    pregunta = infoConcurs.get(0);
+                    tempsIniciConcurs = infoConcurs.get(1);
+                    tempsResposta = infoConcurs.get(2);
+                    for (int i = 3;i< infoConcurs.size();i++){
+                        respostes.add(infoConcurs.get(i));
+                    }
+                    questionIterator++;
+                    System.out.println("++++++++++++Datos recogido++++++++++++\n"+infoConcurs.toString());
+                } catch (Exception e) {
+                    System.out.println("---------------------------------------------");
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+    }
+    public void checkStatusRoom(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //POLL de 2 segundos
+                try {
+                    Thread.sleep(500);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    if (testService.getWaitingRoom2Status()){
+                        try {
+                            //Aqui hay que editar el timer
+                            Thread.sleep(Integer.parseInt(tempsIniciConcurs));
+                            System.out.println("Dentro del concurso");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }else{
+                        System.out.println("Nothing");
+                        checkStatusRoom();
+                    }
+                } catch (Exception e) {
+                    System.out.println("---------------------------------------------");
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
