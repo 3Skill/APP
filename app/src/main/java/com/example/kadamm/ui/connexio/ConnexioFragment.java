@@ -3,6 +3,7 @@ package com.example.kadamm.ui.connexio;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,7 +24,10 @@ import lipermi.net.Client;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import com.example.kadamm.MainActivity;
 import com.example.kadamm.R;
+import com.example.kadamm.RespostesKahoot;
 import com.example.kadamm.databinding.FragmentConnexioBinding;
 
 import java.net.InetSocketAddress;
@@ -39,16 +43,19 @@ public class ConnexioFragment extends Fragment {
     private ImageView trafficLight;
     private boolean isServerAvailable;
     private boolean isNickName;
-    private InterRMI testService;
+
     private int questionIterator = 0;
     private View v;
     Button btnConnection;
 
+    // Server Attributes
+    private InterRMI testService;
     //Atributos recibidos
     private String tempsResposta;
     private int tempsIniciConcurs;
     private String pregunta;
     private ArrayList<String> respostes;
+    private ArrayList<String> infoConcurs;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -301,7 +308,7 @@ public class ConnexioFragment extends Fragment {
                 }
 
                 try {
-                    ArrayList<String> infoConcurs = testService.getConcurs(questionIterator);
+                    infoConcurs = testService.getConcurs(questionIterator);
                     respostes = new ArrayList<String>();
                     pregunta = infoConcurs.get(0);
                     tempsIniciConcurs = Integer.parseInt(infoConcurs.get(1));
@@ -309,7 +316,7 @@ public class ConnexioFragment extends Fragment {
                     for (int i = 3;i< infoConcurs.size();i++){
                         respostes.add(infoConcurs.get(i));
                     }
-                    questionIterator++;
+
                     System.out.println("++++++++++++Datos recogido++++++++++++\n"+infoConcurs.toString());
                 } catch (Exception e) {
                     System.out.println("---------------------------------------------");
@@ -367,7 +374,13 @@ public class ConnexioFragment extends Fragment {
                                     @Override
                                     public void onFinish() {
                                         System.out.println("DENTRO");
+                                        questionIterator++;
                                         progressDialog.dismiss();
+                                        // Create Intent
+                                        Intent intent = new Intent(requireActivity(), RespostesKahoot.class);
+                                        intent.putExtra("arrayListRespostes", infoConcurs);
+                                        intent.putExtra("isFirstQuestion", true);
+                                        startActivity(intent);
                                         
                                         //countdown.setText("Finished");
                                     }
