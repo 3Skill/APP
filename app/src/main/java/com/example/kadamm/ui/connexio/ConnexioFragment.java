@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -30,6 +31,7 @@ import com.example.kadamm.R;
 import com.example.kadamm.RespostesKahoot;
 import com.example.kadamm.databinding.FragmentConnexioBinding;
 
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class ConnexioFragment extends Fragment {
     Button btnConnection;
 
     // Server Attributes
-    private InterRMI testService;
+    //private InterRMI testService;
     //Atributos recibidos
     private String tempsResposta;
     private int tempsIniciConcurs;
@@ -159,7 +161,7 @@ public class ConnexioFragment extends Fragment {
                     CallHandler callHandler = new CallHandler();
                     int port = 1110;
                     Client client = new Client(serverIP, port, callHandler);
-                    testService = (InterRMI) client.getGlobal(InterRMI.class);
+                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
 
                     if (testService.getWaitingRoomStatus()){
                         requireActivity().runOnUiThread(new Runnable() {
@@ -208,7 +210,7 @@ public class ConnexioFragment extends Fragment {
                     CallHandler callHandler = new CallHandler();
                     int port = 1110;
                     Client client = new Client(serverIP, port, callHandler);
-                    testService = (InterRMI) client.getGlobal(InterRMI.class);
+                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
 
                     // Check if nickname not already in the waiting room
                     if (testService.isUserAvailable(nickname)){
@@ -219,8 +221,8 @@ public class ConnexioFragment extends Fragment {
                             @Override
                             public void run() {
                                 Toast.makeText(requireActivity(), "Usuari registrat", Toast.LENGTH_SHORT).show();
-                                getAttributes();
-                                checkStatusRoom();
+                                getAttributes(serverIP);
+                                checkStatusRoom(serverIP);
                             }
                         });
 
@@ -234,7 +236,7 @@ public class ConnexioFragment extends Fragment {
 
                     }
 
-                    //client.close();
+                    client.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -294,7 +296,7 @@ public class ConnexioFragment extends Fragment {
         alertDialog.show();
     }
     // Method for get all atributes of the actual position of the concurs
-    public void getAttributes(){
+    public void getAttributes(String serverIP){
 
         new Thread(new Runnable() {
             @Override
@@ -308,6 +310,11 @@ public class ConnexioFragment extends Fragment {
                 }
 
                 try {
+                    CallHandler callHandler = new CallHandler();
+                    int port = 1110;
+                    Client client = new Client(serverIP, port, callHandler);
+                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
+
                     infoConcurs = testService.getConcurs(questionIterator);
                     respostes = new ArrayList<String>();
                     pregunta = infoConcurs.get(0);
@@ -318,6 +325,7 @@ public class ConnexioFragment extends Fragment {
                     }
 
                     System.out.println("++++++++++++Datos recogido++++++++++++\n"+infoConcurs.toString());
+                    client.close();
                 } catch (Exception e) {
                     System.out.println("---------------------------------------------");
                     e.printStackTrace();
@@ -328,7 +336,7 @@ public class ConnexioFragment extends Fragment {
 
     }
     private Thread hilo;
-    public void checkStatusRoom(){
+    public void checkStatusRoom(String serverIP){
 
         new Thread(new Runnable() {
             @Override
@@ -342,6 +350,10 @@ public class ConnexioFragment extends Fragment {
                 }
 
                 try {
+                    CallHandler callHandler = new CallHandler();
+                    int port = 1110;
+                    Client client = new Client(serverIP, port, callHandler);
+                    InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
                     if (testService.getWaitingRoom2Status()){
 
 //                        try {
@@ -374,14 +386,15 @@ public class ConnexioFragment extends Fragment {
                                     @Override
                                     public void onFinish() {
                                         System.out.println("DENTRO");
-                                        questionIterator++;
                                         progressDialog.dismiss();
                                         // Create Intent
                                         Intent intent = new Intent(requireActivity(), RespostesKahoot.class);
                                         intent.putExtra("arrayListRespostes", infoConcurs);
-                                        intent.putExtra("isFirstQuestion", true);
+                                        intent.putExtra("nickname", nickname);
+                                        intent.putExtra("serverIP", serverIP);
+                                        intent.putExtra("questionIterator", questionIterator);
                                         startActivity(intent);
-                                        
+
                                         //countdown.setText("Finished");
                                     }
                                 }.start();
@@ -391,8 +404,11 @@ public class ConnexioFragment extends Fragment {
 
                     }else{
                         //System.out.println("No ha comenzado el concurso");
-                        checkStatusRoom();
+
+                        checkStatusRoom(serverIP);
                     }
+                    testService.setWaitingRoom2Status(false);
+                    client.close();
                 } catch (Exception e) {
                     System.out.println("---------------------------------------------");
                     e.printStackTrace();
