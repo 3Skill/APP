@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -266,7 +267,25 @@ public class RespostesKahoot extends AppCompatActivity {
                     Client client = new Client(serverIP, port, callHandler);
                     InterRMI testService = (InterRMI) client.getGlobal(InterRMI.class);
                     if (nicknameAnswer != null){
-                        testService.setUserAnswer(nicknameAnswer);
+                        if(testService.setUserAnswer(nicknameAnswer)){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(RespostesKahoot.this, "Resposta enviada", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }else{
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(RespostesKahoot.this, "Resposta no enviada", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }
                     }
                     testService.setWaitingRoom2Status(false);
                     client.close();
