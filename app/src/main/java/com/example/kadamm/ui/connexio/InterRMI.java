@@ -11,4 +11,5 @@ public interface InterRMI {
     public boolean isUserAvailable(String nickname);
     public ArrayList<String> getConcurs(int i);
     public void setUserAnswer(ArrayList<String> nicknameAnswer);
+    public void setWaitingRoom2Status(boolean isWaitingRoom2);
 }

@@ -386,16 +386,15 @@ public class ConnexioFragment extends Fragment {
                                     @Override
                                     public void onFinish() {
                                         System.out.println("DENTRO");
-                                        questionIterator++;
                                         progressDialog.dismiss();
                                         // Create Intent
                                         Intent intent = new Intent(requireActivity(), RespostesKahoot.class);
                                         intent.putExtra("arrayListRespostes", infoConcurs);
-                                        intent.putExtra("isFirstQuestion", true);
                                         intent.putExtra("nickname", nickname);
                                         intent.putExtra("serverIP", serverIP);
+                                        intent.putExtra("questionIterator", questionIterator);
                                         startActivity(intent);
-                                        
+
                                         //countdown.setText("Finished");
                                     }
                                 }.start();
@@ -408,6 +407,7 @@ public class ConnexioFragment extends Fragment {
 
                         checkStatusRoom(serverIP);
                     }
+                    testService.setWaitingRoom2Status(false);
                     client.close();
                 } catch (Exception e) {
                     System.out.println("---------------------------------------------");
