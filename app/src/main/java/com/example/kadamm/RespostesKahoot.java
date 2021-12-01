@@ -350,6 +350,10 @@ public class RespostesKahoot extends AppCompatActivity {
                 btn3.setBackgroundTintList(ColorStateList.valueOf(colorBtn3));
                 btn4.setBackgroundTintList(ColorStateList.valueOf(colorBtn4));
 
+                btn1.setVisibility(View.VISIBLE);
+                btn2.setVisibility(View.VISIBLE);
+                btn3.setVisibility(View.VISIBLE);
+                btn4.setVisibility(View.VISIBLE);
                 // Enable the buttons
                 btn1.setEnabled(true);
                 btn2.setEnabled(true);
