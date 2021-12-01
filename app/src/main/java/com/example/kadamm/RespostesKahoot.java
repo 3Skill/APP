@@ -76,8 +76,8 @@ public class RespostesKahoot extends AppCompatActivity {
         // Generate Colors
         //Grey Color
         greyColor = Color.parseColor("#A9A9A9");
-        colorBtn1 = Color.parseColor("#F44336");
-        colorBtn2 = Color.parseColor("#03A9F4");
+        colorBtn1 = Color.parseColor("#03A9F4");
+        colorBtn2 = Color.parseColor("#F44336");
         colorBtn3 = Color.parseColor("#FFEB3B");
         colorBtn4 = Color.parseColor("#4CAF50");
 
